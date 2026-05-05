@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PicklePug</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--pp-lime:#C6F135;--pp-lime-dark:#9DC219;--pp-navy:#0B1629;--pp-navy2:#162038;
+--pp-teal:#00C9A7;--pp-orange:#FF6B35;--pp-white:#F8FAF5;--pp-gray:#8A9BB0;
+--pp-card:#1A2942;--pp-border:rgba(198,241,53,0.15);--pp-border2:rgba(255,255,255,0.08);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--pp-navy);color:var(--pp-white);min-height:100vh;overflow-x:hidden}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(11,22,41,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--pp-border);position:sticky;top:0;z-index:100}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--pp-lime);letter-spacing:2px;cursor:pointer}
+.logo span{color:var(--pp-white)}
+.nav-links{display:flex;gap:0.25rem}
+.nav-btn{background:none;border:none;color:var(--pp-gray);font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:500;padding:0.5rem 0.85rem;border-radius:8px;cursor:pointer;transition:all 0.2s;letter-spacing:0.5px;text-transform:uppercase}
+.nav-btn:hover,.nav-btn.active{color:var(--pp-lime);background:rgba(198,241,53,0.08)}
+.nav-right{display:flex;gap:0.5rem;align-items:center}
+.btn{padding:0.5rem 1.25rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.85rem;cursor:pointer;transition:all 0.2s;border:none}
+.btn-outline{background:transparent;border:1.5px solid var(--pp-border);color:var(--pp-white)}
+.btn-outline:hover{border-color:var(--pp-lime);color:var(--pp-lime)}
+.btn-lime{background:var(--pp-lime);color:var(--pp-navy);font-weight:700}
+.btn-lime:hover{background:var(--pp-lime-dark);transform:translateY(-1px)}
+.btn-sm{padding:0.35rem 0.9rem;font-size:0.8rem}
+.btn-teal{background:var(--pp-teal);color:var(--pp-navy);font-weight:700}
+.btn-orange{background:var(--pp-orange);color:#fff;font-weight:700}
+.btn-ghost{background:rgba(255,255,255,0.06);border:1px solid var(--pp-border2);color:var(--pp-white)}
+.btn-ghost:hover{background:rgba(255,255,255,0.12)}
+.btn-danger{background:rgba(255,60,60,0.15);border:1px solid rgba(255,60,60,0.3);color:#ff6b6b}
+
+/* PAGES */
+.page{display:none;animation:fadeIn 0.3s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+.hero{min-height:calc(100vh - 64px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem 2rem;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(0,201,167,0.12) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(198,241,53,0.1) 0%,transparent 50%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(198,241,53,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(198,241,53,0.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(198,241,53,0.1);border:1px solid rgba(198,241,53,0.3);border-radius:50px;padding:0.35rem 1rem;font-size:0.78rem;font-weight:600;color:var(--pp-lime);letter-spacing:1px;text-transform:uppercase;margin-bottom:1.5rem}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,10vw,7rem);line-height:1;letter-spacing:3px;margin-bottom:1rem}
+.hero h1 em{font-style:normal;color:var(--pp-lime)}
+.hero p{font-size:1.15rem;color:var(--pp-gray);max-width:560px;line-height:1.7;margin-bottom:2.5rem}
+.hero-ctas{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+.hero-stats{display:flex;gap:3rem;margin-top:4rem;flex-wrap:wrap;justify-content:center}
+.hero-stat{text-align:center}
+.hero-stat .num{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--pp-lime)}
+.hero-stat .lbl{font-size:0.78rem;color:var(--pp-gray);letter-spacing:1px;text-transform:uppercase}
+
+/* SECTIONS */
+.section{padding:4rem 2rem;max-width:1200px;margin:0 auto}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;letter-spacing:2px;margin-bottom:0.5rem}
+.section-sub{color:var(--pp-gray);margin-bottom:2.5rem;font-size:0.95rem}
+.section-title .accent{color:var(--pp-lime)}
+
+/* CARDS */
+.card{background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:16px;padding:1.5rem;transition:all 0.2s}
+.card:hover{border-color:var(--pp-border);transform:translateY(-2px)}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem}
+
+/* RATING */
+.rating-badge{display:inline-block;background:var(--pp-lime);color:var(--pp-navy);font-family:'Bebas Neue',sans-serif;font-size:1.6rem;padding:0.1rem 0.7rem;border-radius:8px;letter-spacing:1px}
+.player-card{display:flex;gap:1rem;align-items:flex-start}
+.avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--pp-teal),var(--pp-lime));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;color:var(--pp-navy);flex-shrink:0}
+.player-info .name{font-weight:600;font-size:1rem;margin-bottom:0.2rem}
+.player-info .handle{color:var(--pp-gray);font-size:0.82rem}
+.stat-row{display:flex;gap:1rem;margin-top:0.75rem;flex-wrap:wrap}
+.stat-pill{background:rgba(255,255,255,0.05);border:1px solid var(--pp-border2);border-radius:6px;padding:0.25rem 0.65rem;font-size:0.78rem}
+.stat-pill span{color:var(--pp-lime);font-weight:600}
+
+/* TOURNAMENT BRACKET */
+.bracket-wrap{overflow-x:auto;padding-bottom:1rem}
+.bracket{display:flex;gap:0;align-items:stretch}
+.round{display:flex;flex-direction:column;justify-content:space-around;min-width:160px}
+.round-title{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--pp-lime);text-align:center;padding:0.5rem 0.5rem 1rem;border-bottom:1px solid var(--pp-border);margin-bottom:0.5rem}
+.match{margin:0.4rem 0.5rem;position:relative}
+.match-box{background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:10px;overflow:hidden}
+.match-team{padding:0.45rem 0.75rem;font-size:0.82rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;transition:background 0.15s}
+.match-team:first-child{border-bottom:1px solid var(--pp-border2)}
+.match-team.winner{background:rgba(198,241,53,0.1)}
+.match-team.winner .score{color:var(--pp-lime);font-weight:700}
+.score{font-size:0.78rem;color:var(--pp-gray);min-width:24px;text-align:right}
+.connector{width:20px;flex-shrink:0;position:relative}
+
+/* GALLERY */
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.75rem}
+.gallery-item{border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:var(--pp-card);border:1px solid var(--pp-border2);position:relative;cursor:pointer;transition:all 0.2s}
+.gallery-item:hover{transform:scale(1.02);border-color:var(--pp-lime)}
+.gallery-item .thumb{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.5rem}
+.gallery-item .overlay{position:absolute;inset:0;background:linear-gradient(transparent 50%,rgba(0,0,0,0.7));display:flex;align-items:flex-end;padding:0.75rem;opacity:0;transition:opacity 0.2s}
+.gallery-item:hover .overlay{opacity:1}
+.gallery-item .caption{font-size:0.78rem;font-weight:500}
+
+/* SHOP */
+.product-card{background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:16px;overflow:hidden;transition:all 0.2s}
+.product-card:hover{border-color:var(--pp-border);transform:translateY(-3px)}
+.product-thumb{height:160px;display:flex;align-items:center;justify-content:center;font-size:4rem;background:rgba(255,255,255,0.03);border-bottom:1px solid var(--pp-border2)}
+.product-info{padding:1.1rem}
+.product-name{font-weight:600;margin-bottom:0.3rem}
+.product-seller{font-size:0.8rem;color:var(--pp-gray);margin-bottom:0.5rem}
+.product-price{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--pp-lime)}
+.product-badge{display:inline-block;font-size:0.7rem;padding:0.2rem 0.5rem;border-radius:4px;margin-left:0.5rem;font-weight:600;vertical-align:middle}
+.badge-new{background:rgba(0,201,167,0.15);color:var(--pp-teal)}
+.badge-used{background:rgba(255,107,53,0.15);color:var(--pp-orange)}
+
+/* SOCIAL */
+.post-card{background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:16px;padding:1.25rem;margin-bottom:1rem}
+.post-header{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.9rem}
+.post-body{font-size:0.92rem;line-height:1.6;color:rgba(248,250,245,0.85);margin-bottom:0.9rem}
+.post-img{width:100%;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid var(--pp-border2);height:180px;display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:0.9rem}
+.post-actions{display:flex;gap:0.5rem}
+.action-btn{background:rgba(255,255,255,0.04);border:1px solid var(--pp-border2);color:var(--pp-gray);padding:0.35rem 0.85rem;border-radius:8px;font-size:0.8rem;cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif}
+.action-btn:hover{background:rgba(198,241,53,0.08);border-color:rgba(198,241,53,0.3);color:var(--pp-lime)}
+.event-card{background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:12px;padding:1.1rem;display:flex;gap:1rem;align-items:flex-start;margin-bottom:0.75rem}
+.event-date{background:rgba(198,241,53,0.1);border:1px solid rgba(198,241,53,0.2);border-radius:10px;padding:0.5rem 0.85rem;text-align:center;flex-shrink:0}
+.event-date .day{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--pp-lime);line-height:1}
+.event-date .month{font-size:0.7rem;color:var(--pp-gray);text-transform:uppercase;letter-spacing:1px}
+
+/* DASHBOARD */
+.dash-grid{display:grid;grid-template-columns:1fr 2fr;gap:1.25rem}
+@media(max-width:680px){.dash-grid{grid-template-columns:1fr}}
+.stat-card{background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:12px;padding:1.1rem;text-align:center}
+.stat-card .val{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--pp-lime)}
+.stat-card .lbl{font-size:0.75rem;color:var(--pp-gray);text-transform:uppercase;letter-spacing:0.8px}
+.input-row{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem}
+.input-row label{font-size:0.82rem;color:var(--pp-gray);font-weight:500}
+.pp-input{background:rgba(255,255,255,0.05);border:1px solid var(--pp-border2);border-radius:8px;padding:0.6rem 0.9rem;color:var(--pp-white);font-family:'DM Sans',sans-serif;font-size:0.9rem;width:100%;outline:none;transition:border-color 0.2s}
+.pp-input:focus{border-color:var(--pp-lime)}
+.pp-select{background:rgba(11,22,41,0.9);border:1px solid var(--pp-border2);border-radius:8px;padding:0.6rem 0.9rem;color:var(--pp-white);font-family:'DM Sans',sans-serif;font-size:0.9rem;width:100%;outline:none}
+.match-history{background:rgba(255,255,255,0.02);border-radius:10px;overflow:hidden}
+.mh-row{display:flex;justify-content:space-between;align-items:center;padding:0.7rem 1rem;border-bottom:1px solid var(--pp-border2);font-size:0.85rem}
+.mh-row:last-child{border-bottom:none}
+.win{color:var(--pp-teal);font-weight:600}
+.loss{color:var(--pp-orange);font-weight:600}
+
+/* TABS */
+.tabs{display:flex;gap:0.25rem;margin-bottom:1.5rem;background:rgba(255,255,255,0.03);border-radius:10px;padding:0.25rem}
+.tab{background:none;border:none;color:var(--pp-gray);font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:500;padding:0.5rem 1.1rem;border-radius:8px;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.tab.active{background:var(--pp-lime);color:var(--pp-navy);font-weight:700}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* FORM */
+.form-section{background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:16px;padding:1.5rem;margin-bottom:1.25rem}
+.form-title{font-size:1rem;font-weight:600;margin-bottom:1.1rem;color:var(--pp-white)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}
+
+/* NOTIFICATION */
+.notif{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--pp-lime);color:var(--pp-navy);font-weight:700;padding:0.75rem 1.25rem;border-radius:10px;font-size:0.88rem;transform:translateY(100px);transition:transform 0.3s;z-index:999}
+.notif.show{transform:translateY(0)}
+
+/* PROFILE HEADER */
+.profile-header{background:linear-gradient(135deg,var(--pp-navy2),rgba(0,201,167,0.15));border:1px solid var(--pp-border);border-radius:20px;padding:2rem;display:flex;gap:1.5rem;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap}
+.profile-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--pp-orange),var(--pp-lime));display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--pp-navy);flex-shrink:0;border:3px solid var(--pp-lime)}
+.profile-meta{flex:1}
+.profile-meta h2{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:1px;margin-bottom:0.25rem}
+.profile-meta p{color:var(--pp-gray);font-size:0.88rem;margin-bottom:0.75rem}
+
+/* FILTER BAR */
+.filter-bar{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.filter-chip{background:rgba(255,255,255,0.04);border:1px solid var(--pp-border2);border-radius:20px;padding:0.35rem 0.9rem;font-size:0.8rem;cursor:pointer;transition:all 0.15s;color:var(--pp-gray)}
+.filter-chip:hover,.filter-chip.active{background:rgba(198,241,53,0.1);border-color:rgba(198,241,53,0.3);color:var(--pp-lime)}
+
+/* LEADERBOARD */
+.lb-row{display:flex;align-items:center;gap:1rem;padding:0.9rem 1rem;border-bottom:1px solid var(--pp-border2);transition:background 0.15s}
+.lb-row:hover{background:rgba(255,255,255,0.02)}
+.lb-rank{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;width:32px;text-align:center;color:var(--pp-gray)}
+.lb-rank.gold{color:#FFD700}.lb-rank.silver{color:#C0C0C0}.lb-rank.bronze{color:#CD7F32}
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.75rem}
+</style>
+</head>
+<body>
+<h2 class="sr-only">PicklePug — Pickleball Community Platform with ratings, tournaments, shop, and social</h2>
+
+<!-- NAV -->
+<nav>
+  <div class="logo" onclick="showPage('home')">PICKLE<span>PUG</span></div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showPage('home',this)">Home</button>
+    <button class="nav-btn" onclick="showPage('players',this)">Players</button>
+    <button class="nav-btn" onclick="showPage('tournaments',this)">Tournaments</button>
+    <button class="nav-btn" onclick="showPage('gallery',this)">Gallery</button>
+    <button class="nav-btn" onclick="showPage('shop',this)">Shop</button>
+    <button class="nav-btn" onclick="showPage('social',this)">Social</button>
+    <button class="nav-btn" onclick="showPage('dashboard',this)">Dashboard</button>
+  </div>
+  <div class="nav-right">
+    <button class="btn btn-outline btn-sm" onclick="showNotif('Logged in!')">Log In</button>
+    <button class="btn btn-lime btn-sm" onclick="showNotif('Account created!')">Join Free</button>
+  </div>
+</nav>
+
+<!-- NOTIFICATION -->
+<div class="notif" id="notif">✓ Saved!</div>
+
+<!-- HOME PAGE -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-badge">🏓 #1 Pickleball Platform in PH</div>
+    <h1>PLAY. RANK.<br><em>DOMINATE.</em></h1>
+    <p>Track your DUPR-style rating, compete in tournaments, buy & sell gear, and connect with the pickleball community.</p>
+    <div class="hero-ctas">
+      <button class="btn btn-lime" onclick="showPage('dashboard')">Get Your Rating</button>
+      <button class="btn btn-ghost" onclick="showPage('tournaments')">View Tournaments</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">2,840+</div><div class="lbl">Registered Players</div></div>
+      <div class="hero-stat"><div class="num">140+</div><div class="lbl">Tournaments</div></div>
+      <div class="hero-stat"><div class="num">18</div><div class="lbl">Cities</div></div>
+      <div class="hero-stat"><div class="num">99.9%</div><div class="lbl">Uptime</div></div>
+    </div>
+  </div>
+  
+  <div class="section">
+    <div class="top-bar">
+      <div><div class="section-title">TOP <em class="accent">PLAYERS</em></div><div class="section-sub">Global PicklePug rating leaderboard</div></div>
+      <button class="btn btn-ghost btn-sm" onclick="showPage('players')">View All →</button>
+    </div>
+    <div style="background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:16px;overflow:hidden">
+      <div class="lb-row" style="border-bottom:1px solid var(--pp-border2)">
+        <div class="lb-rank gold">1</div>
+        <div class="avatar" style="width:40px;height:40px;font-size:0.9rem">MR</div>
+        <div style="flex:1"><div style="font-weight:600;font-size:0.92rem">Maria Reyes</div><div style="font-size:0.78rem;color:var(--pp-gray)">Cebu City · Open Women</div></div>
+        <div class="rating-badge">5.42</div>
+      </div>
+      <div class="lb-row">
+        <div class="lb-rank silver">2</div>
+        <div class="avatar" style="width:40px;height:40px;font-size:0.9rem;background:linear-gradient(135deg,#FF6B35,#ff9f6b)">JC</div>
+        <div style="flex:1"><div style="font-weight:600;font-size:0.92rem">Juan Cruz</div><div style="font-size:0.78rem;color:var(--pp-gray)">Manila · Open Men</div></div>
+        <div class="rating-badge">5.31</div>
+      </div>
+      <div class="lb-row">
+        <div class="lb-rank bronze">3</div>
+        <div class="avatar" style="width:40px;height:40px;font-size:0.9rem;background:linear-gradient(135deg,#534AB7,#8F86E8)">AS</div>
+        <div style="flex:1"><div style="font-weight:600;font-size:0.92rem">Ana Santos</div><div style="font-size:0.78rem;color:var(--pp-gray)">Davao · Mixed Doubles</div></div>
+        <div class="rating-badge">5.18</div>
+      </div>
+      <div class="lb-row">
+        <div class="lb-rank">4</div>
+        <div class="avatar" style="width:40px;height:40px;font-size:0.9rem;background:linear-gradient(135deg,#0F6E56,#1D9E75)">BT</div>
+        <div style="flex:1"><div style="font-weight:600;font-size:0.92rem">Ben Torres</div><div style="font-size:0.78rem;color:var(--pp-gray)">Quezon City · Men's Doubles</div></div>
+        <div class="rating-badge">5.05</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="padding-top:0">
+    <div class="grid-3">
+      <div class="card" style="border-color:rgba(0,201,167,0.2);cursor:pointer" onclick="showPage('tournaments')">
+        <div style="font-size:2rem;margin-bottom:0.75rem">🏆</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:1px;margin-bottom:0.35rem">Tournaments</div>
+        <div style="color:var(--pp-gray);font-size:0.85rem;line-height:1.5">Bracket-style competitions with live scoring and automatic seeding.</div>
+        <div style="margin-top:1rem;color:var(--pp-teal);font-size:0.83rem;font-weight:600">3 upcoming →</div>
+      </div>
+      <div class="card" style="border-color:rgba(198,241,53,0.2);cursor:pointer" onclick="showPage('shop')">
+        <div style="font-size:2rem;margin-bottom:0.75rem">🛒</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:1px;margin-bottom:0.35rem">Marketplace</div>
+        <div style="color:var(--pp-gray);font-size:0.85rem;line-height:1.5">Buy and sell paddles, balls, and accessories from real players.</div>
+        <div style="margin-top:1rem;color:var(--pp-lime);font-size:0.83rem;font-weight:600">142 listings →</div>
+      </div>
+      <div class="card" style="border-color:rgba(255,107,53,0.2);cursor:pointer" onclick="showPage('social')">
+        <div style="font-size:2rem;margin-bottom:0.75rem">📣</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:1px;margin-bottom:0.35rem">Community</div>
+        <div style="color:var(--pp-gray);font-size:0.85rem;line-height:1.5">Share moments, post events, and connect with fellow players.</div>
+        <div style="margin-top:1rem;color:var(--pp-orange);font-size:0.83rem;font-weight:600">Join the feed →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PLAYERS PAGE -->
+<div class="page" id="page-players">
+  <div class="section">
+    <div class="top-bar">
+      <div><div class="section-title">PLAYER <em class="accent">DIRECTORY</em></div><div class="section-sub">Search and filter PicklePug rated players</div></div>
+      <button class="btn btn-lime btn-sm" onclick="showPage('dashboard')">My Profile →</button>
+    </div>
+    <div class="filter-bar">
+      <div class="filter-chip active">All Players</div>
+      <div class="filter-chip">Open Men</div>
+      <div class="filter-chip">Open Women</div>
+      <div class="filter-chip">Mixed Doubles</div>
+      <div class="filter-chip">Senior 50+</div>
+      <div class="filter-chip">Cebu</div>
+      <div class="filter-chip">Manila</div>
+      <div class="filter-chip">Davao</div>
+    </div>
+    <div style="background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:16px;overflow:hidden">
+      <div style="padding:1rem;border-bottom:1px solid var(--pp-border2)">
+        <input class="pp-input" placeholder="🔍  Search players by name, city, or rating..." style="max-width:400px"/>
+      </div>
+      <div id="player-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOURNAMENTS PAGE -->
+<div class="page" id="page-tournaments">
+  <div class="section">
+    <div class="section-title">TOURNAMENTS & <em class="accent">BRACKETS</em></div>
+    <div class="section-sub">Live brackets, results, and upcoming events</div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('t','upcoming',this)">Upcoming</button>
+      <button class="tab" onclick="switchTab('t','bracket',this)">Live Bracket</button>
+      <button class="tab" onclick="switchTab('t','results',this)">Past Results</button>
+      <button class="tab" onclick="switchTab('t','register',this)">Register</button>
+    </div>
+    
+    <div class="tab-content active" id="t-upcoming">
+      <div class="grid-2">
+        <div class="card" style="border-color:rgba(198,241,53,0.25)">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem">
+            <div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px">PicklePug Open 2025</div><div style="font-size:0.8rem;color:var(--pp-gray)">📍 Cebu Sports Complex</div></div>
+            <div style="background:rgba(198,241,53,0.1);border:1px solid rgba(198,241,53,0.2);border-radius:6px;padding:0.3rem 0.6rem;font-size:0.72rem;color:var(--pp-lime);font-weight:600">OPEN</div>
+          </div>
+          <div style="font-size:0.83rem;color:var(--pp-gray);margin-bottom:1rem;line-height:1.5">📅 June 14–15, 2025 &nbsp;|&nbsp; 🏆 ₱50,000 prize pool &nbsp;|&nbsp; 64 players</div>
+          <div style="display:flex;gap:0.5rem">
+            <button class="btn btn-lime btn-sm" onclick="showNotif('Registration submitted!')">Register Now</button>
+            <button class="btn btn-ghost btn-sm" onclick="switchTab('t','bracket',document.querySelector(\'#page-tournaments .tab\'))">View Bracket</button>
+          </div>
+        </div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem">
+            <div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px">Visayas Championship</div><div style="font-size:0.8rem;color:var(--pp-gray)">📍 SM Seaside Event Hall</div></div>
+            <div style="background:rgba(0,201,167,0.1);border:1px solid rgba(0,201,167,0.2);border-radius:6px;padding:0.3rem 0.6rem;font-size:0.72rem;color:var(--pp-teal);font-weight:600">INVITE ONLY</div>
+          </div>
+          <div style="font-size:0.83rem;color:var(--pp-gray);margin-bottom:1rem;line-height:1.5">📅 July 5–6, 2025 &nbsp;|&nbsp; 🏆 ₱120,000 prize pool &nbsp;|&nbsp; 32 players</div>
+          <div style="display:flex;gap:0.5rem">
+            <button class="btn btn-ghost btn-sm" onclick="showNotif('Application sent!')">Apply</button>
+          </div>
+        </div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem">
+            <div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px">Weekend Warrior Series #8</div><div style="font-size:0.8rem;color:var(--pp-gray)">📍 Mandaue City Courts</div></div>
+            <div style="background:rgba(255,107,53,0.1);border:1px solid rgba(255,107,53,0.2);border-radius:6px;padding:0.3rem 0.6rem;font-size:0.72rem;color:var(--pp-orange);font-weight:600">RECREATIONAL</div>
+          </div>
+          <div style="font-size:0.83rem;color:var(--pp-gray);margin-bottom:1rem;line-height:1.5">📅 May 24, 2025 &nbsp;|&nbsp; 🏆 Trophies + Merch &nbsp;|&nbsp; 48 players</div>
+          <div style="display:flex;gap:0.5rem">
+            <button class="btn btn-lime btn-sm" onclick="showNotif('Registration submitted!')">Register Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="t-bracket">
+      <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem">
+        <div style="font-weight:600">PicklePug Open 2025 — Open Men's Singles <span style="color:var(--pp-lime);font-size:0.82rem;margin-left:0.5rem">● LIVE</span></div>
+        <div style="font-size:0.82rem;color:var(--pp-gray)">Last update: 2 min ago</div>
+      </div>
+      <div class="bracket-wrap">
+        <div class="bracket" id="bracket-container"></div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="t-results">
+      <div style="background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:16px;overflow:hidden">
+        <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--pp-border2);font-weight:600;font-size:0.9rem;display:flex;gap:2rem">
+          <span>Tournament</span><span style="margin-left:auto;width:80px;text-align:center">Winner</span><span style="width:80px;text-align:center">Date</span>
+        </div>
+        <div id="results-list"></div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="t-register">
+      <div class="form-section">
+        <div class="form-title">Tournament Registration</div>
+        <div class="form-row">
+          <div class="input-row"><label>Select Tournament</label><select class="pp-select"><option>PicklePug Open 2025</option><option>Weekend Warrior #8</option></select></div>
+          <div class="input-row"><label>Category</label><select class="pp-select"><option>Open Men's Singles</option><option>Open Women's Singles</option><option>Men's Doubles</option><option>Mixed Doubles</option><option>Senior 50+</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="input-row"><label>Full Name</label><input class="pp-input" placeholder="Your full name"/></div>
+          <div class="input-row"><label>Partner Name (Doubles)</label><input class="pp-input" placeholder="Partner's full name (if applicable)"/></div>
+        </div>
+        <div class="form-row">
+          <div class="input-row"><label>Current Rating</label><input class="pp-input" placeholder="e.g. 4.25"/></div>
+          <div class="input-row"><label>City / Club</label><input class="pp-input" placeholder="Your home court or club"/></div>
+        </div>
+        <button class="btn btn-lime" onclick="showNotif('Registration submitted! Check your email.')">Submit Registration</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GALLERY PAGE -->
+<div class="page" id="page-gallery">
+  <div class="section">
+    <div class="top-bar">
+      <div><div class="section-title">TOURNAMENT <em class="accent">GALLERY</em></div><div class="section-sub">Photos and highlights from our events</div></div>
+      <button class="btn btn-lime btn-sm" onclick="showNotif('Upload feature opens!')">Upload Photos</button>
+    </div>
+    <div class="filter-bar">
+      <div class="filter-chip active">All Events</div>
+      <div class="filter-chip">PicklePug Open</div>
+      <div class="filter-chip">Visayas Champ</div>
+      <div class="filter-chip">Weekend Warrior</div>
+      <div class="filter-chip">Training Sessions</div>
+      <div class="filter-chip">2024</div>
+      <div class="filter-chip">2025</div>
+    </div>
+    <div class="gallery-grid" id="gallery-grid"></div>
+  </div>
+</div>
+
+<!-- SHOP PAGE -->
+<div class="page" id="page-shop">
+  <div class="section">
+    <div class="section-title">PLAYER <em class="accent">MARKETPLACE</em></div>
+    <div class="section-sub">Buy & sell paddles, balls, and gear — direct from the community</div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('s','browse',this)">Browse Listings</button>
+      <button class="tab" onclick="switchTab('s','sell',this)">Sell Your Gear</button>
+      <button class="tab" onclick="switchTab('s','orders',this)">My Orders</button>
+    </div>
+    
+    <div class="tab-content active" id="s-browse">
+      <div style="display:flex;gap:0.75rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap">
+        <input class="pp-input" placeholder="🔍  Search paddles, balls, accessories..." style="max-width:320px"/>
+        <div class="filter-chip active">All</div>
+        <div class="filter-chip">Paddles</div>
+        <div class="filter-chip">Balls</div>
+        <div class="filter-chip">Bags</div>
+        <div class="filter-chip">Apparel</div>
+        <div class="filter-chip">Accessories</div>
+      </div>
+      <div class="grid-4" id="shop-grid"></div>
+    </div>
+    
+    <div class="tab-content" id="s-sell">
+      <div class="form-section">
+        <div class="form-title">List Your Item</div>
+        <div class="form-row">
+          <div class="input-row"><label>Item Title</label><input class="pp-input" placeholder="e.g. Selkirk Vanguard Control - Power Air"/></div>
+          <div class="input-row"><label>Category</label><select class="pp-select"><option>Paddle</option><option>Balls</option><option>Bag</option><option>Apparel</option><option>Accessory</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="input-row"><label>Condition</label><select class="pp-select"><option>Brand New</option><option>Like New</option><option>Good</option><option>Fair</option></select></div>
+          <div class="input-row"><label>Price (₱)</label><input class="pp-input" placeholder="e.g. 4500"/></div>
+        </div>
+        <div class="input-row"><label>Description</label><textarea class="pp-input" rows="3" placeholder="Describe your item, usage, any wear..."></textarea></div>
+        <div class="input-row"><label>Contact / Meetup Location</label><input class="pp-input" placeholder="How to arrange the sale"/></div>
+        <button class="btn btn-lime" onclick="showNotif('Listing posted successfully!')">Post Listing</button>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="s-orders">
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:1rem;padding:0.75rem 0;border-bottom:1px solid var(--pp-border2)">
+          <div style="font-size:1.5rem">🏓</div>
+          <div style="flex:1"><div style="font-weight:600;font-size:0.9rem">Joola Ben Johns Hyperion CFS 16mm</div><div style="font-size:0.78rem;color:var(--pp-gray)">Seller: ArnieBoy · Ordered May 2, 2025</div></div>
+          <div style="text-align:right"><div style="color:var(--pp-lime);font-weight:700">₱7,200</div><div style="font-size:0.75rem;color:var(--pp-teal)">Delivered ✓</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:1rem;padding:0.75rem 0">
+          <div style="font-size:1.5rem">🎽</div>
+          <div style="flex:1"><div style="font-weight:600;font-size:0.9rem">PicklePug Jersey (XL)</div><div style="font-size:0.78rem;color:var(--pp-gray)">Seller: PicklePug Official · Ordered Apr 28, 2025</div></div>
+          <div style="text-align:right"><div style="color:var(--pp-lime);font-weight:700">₱850</div><div style="font-size:0.75rem;color:var(--pp-orange)">In Transit</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SOCIAL PAGE -->
+<div class="page" id="page-social">
+  <div class="section">
+    <div class="section-title">COMMUNITY <em class="accent">FEED</em></div>
+    <div class="section-sub">Posts, events, and pickleball moments from the PH community</div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('c','feed',this)">Feed</button>
+      <button class="tab" onclick="switchTab('c','events',this)">Events</button>
+      <button class="tab" onclick="switchTab('c','post',this)">Create Post</button>
+    </div>
+    
+    <div class="tab-content active" id="c-feed">
+      <div id="social-feed"></div>
+    </div>
+    
+    <div class="tab-content" id="c-events">
+      <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
+        <div style="font-weight:500;font-size:0.95rem">Upcoming Community Events</div>
+        <button class="btn btn-lime btn-sm" onclick="switchTab('c','post',document.querySelectorAll(\'#page-social .tab\')[2])">+ Add Event</button>
+      </div>
+      <div id="events-list"></div>
+    </div>
+    
+    <div class="tab-content" id="c-post">
+      <div class="form-section">
+        <div class="form-title">Create a Post or Event</div>
+        <div class="input-row">
+          <label>Post Type</label>
+          <select class="pp-select" id="post-type" onchange="toggleEventFields()">
+            <option value="post">Regular Post</option>
+            <option value="event">Event Announcement</option>
+          </select>
+        </div>
+        <div id="event-fields" style="display:none">
+          <div class="form-row">
+            <div class="input-row"><label>Event Name</label><input class="pp-input" placeholder="e.g. Sunset Pickleball Mixer"/></div>
+            <div class="input-row"><label>Date & Time</label><input class="pp-input" type="datetime-local"/></div>
+          </div>
+          <div class="input-row"><label>Location</label><input class="pp-input" placeholder="Court name and address"/></div>
+        </div>
+        <div class="input-row"><label>Caption / Description</label><textarea class="pp-input" rows="4" placeholder="What's on your mind? Share a moment, tip, or event..."></textarea></div>
+        <div class="input-row"><label>Add Photo/Video (optional)</label><input class="pp-input" type="file" accept="image/*,video/*"/></div>
+        <button class="btn btn-lime" onclick="showNotif('Post published to the feed!')">Publish</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD PAGE -->
+<div class="page" id="page-dashboard">
+  <div class="section">
+    <div class="section-title">PLAYER <em class="accent">DASHBOARD</em></div>
+    <div class="section-sub">Your personal portfolio, ratings, and match history</div>
+    
+    <div class="profile-header">
+      <div class="profile-avatar">JD</div>
+      <div class="profile-meta">
+        <h2>JAKE DELA CRUZ</h2>
+        <p>@jakedc · Cebu City · Open Men's Singles & Doubles</p>
+        <div class="stat-row">
+          <div class="stat-pill">Rating <span>4.15</span></div>
+          <div class="stat-pill">W/L <span>34/18</span></div>
+          <div class="stat-pill">Rank <span>#47</span></div>
+          <div class="stat-pill">Member since <span>2023</span></div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="showNotif('Profile saved!')">Edit Profile</button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('d','overview',this)">Overview</button>
+      <button class="tab" onclick="switchTab('d','scores',this)">Log Scores</button>
+      <button class="tab" onclick="switchTab('d','portfolio',this)">Portfolio</button>
+      <button class="tab" onclick="switchTab('d','settings',this)">Settings</button>
+    </div>
+    
+    <div class="tab-content active" id="d-overview">
+      <div class="grid-4" style="margin-bottom:1.25rem">
+        <div class="stat-card"><div class="val">4.15</div><div class="lbl">PPR Rating</div></div>
+        <div class="stat-card"><div class="val">34</div><div class="lbl">Wins</div></div>
+        <div class="stat-card"><div class="val">65.4%</div><div class="lbl">Win Rate</div></div>
+        <div class="stat-card"><div class="val">#47</div><div class="lbl">Global Rank</div></div>
+      </div>
+      <div class="dash-grid">
+        <div>
+          <div class="form-section">
+            <div class="form-title">Rating Progression</div>
+            <div style="display:flex;flex-direction:column;gap:0.5rem">
+              <div style="display:flex;justify-content:space-between;font-size:0.82rem"><span style="color:var(--pp-gray)">Jan 2025</span><span style="color:var(--pp-lime)">3.82</span></div>
+              <div style="height:6px;background:rgba(255,255,255,0.06);border-radius:3px"><div style="width:65%;height:100%;background:var(--pp-lime);border-radius:3px"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:0.82rem"><span style="color:var(--pp-gray)">Feb 2025</span><span style="color:var(--pp-lime)">3.95</span></div>
+              <div style="height:6px;background:rgba(255,255,255,0.06);border-radius:3px"><div style="width:72%;height:100%;background:var(--pp-lime);border-radius:3px"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:0.82rem"><span style="color:var(--pp-gray)">Mar 2025</span><span style="color:var(--pp-lime)">4.02</span></div>
+              <div style="height:6px;background:rgba(255,255,255,0.06);border-radius:3px"><div style="width:78%;height:100%;background:var(--pp-lime);border-radius:3px"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:0.82rem"><span style="color:var(--pp-gray)">Apr 2025</span><span style="color:var(--pp-teal)">4.15 ↑</span></div>
+              <div style="height:6px;background:rgba(255,255,255,0.06);border-radius:3px"><div style="width:84%;height:100%;background:var(--pp-teal);border-radius:3px"></div></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="form-section">
+            <div class="form-title">Recent Match History</div>
+            <div class="match-history">
+              <div class="mh-row"><div><div style="font-size:0.85rem;font-weight:500">vs. Ricky Palma</div><div style="font-size:0.75rem;color:var(--pp-gray)">PPO Open · May 4</div></div><div style="text-align:right"><div class="win">WIN</div><div style="font-size:0.75rem;color:var(--pp-gray)">11-7, 11-5</div></div></div>
+              <div class="mh-row"><div><div style="font-size:0.85rem;font-weight:500">vs. Marco Sy</div><div style="font-size:0.75rem;color:var(--pp-gray)">Weekend Warrior · May 1</div></div><div style="text-align:right"><div class="loss">LOSS</div><div style="font-size:0.75rem;color:var(--pp-gray)">8-11, 11-9, 7-11</div></div></div>
+              <div class="mh-row"><div><div style="font-size:0.85rem;font-weight:500">vs. Luis Tan</div><div style="font-size:0.75rem;color:var(--pp-gray)">Club Play · Apr 28</div></div><div style="text-align:right"><div class="win">WIN</div><div style="font-size:0.75rem;color:var(--pp-gray)">11-4, 11-8</div></div></div>
+              <div class="mh-row"><div><div style="font-size:0.85rem;font-weight:500">vs. Brent Go</div><div style="font-size:0.75rem;color:var(--pp-gray)">PPO Open · Apr 25</div></div><div style="text-align:right"><div class="win">WIN</div><div style="font-size:0.75rem;color:var(--pp-gray)">11-9, 9-11, 11-6</div></div></div>
+              <div class="mh-row"><div><div style="font-size:0.85rem;font-weight:500">vs. Carlo Reyes</div><div style="font-size:0.75rem;color:var(--pp-gray)">Ladder · Apr 20</div></div><div style="text-align:right"><div class="loss">LOSS</div><div style="font-size:0.75rem;color:var(--pp-gray)">6-11, 11-8, 6-11</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="d-scores">
+      <div class="form-section">
+        <div class="form-title">Log a Match Result</div>
+        <div class="form-row">
+          <div class="input-row"><label>Opponent Name</label><input class="pp-input" placeholder="Opponent's full name"/></div>
+          <div class="input-row"><label>Opponent Rating</label><input class="pp-input" placeholder="e.g. 4.30"/></div>
+        </div>
+        <div class="form-row">
+          <div class="input-row"><label>Match Type</label><select class="pp-select"><option>Singles</option><option>Doubles</option><option>Mixed Doubles</option></select></div>
+          <div class="input-row"><label>Event / Context</label><input class="pp-input" placeholder="Tournament name or club play"/></div>
+        </div>
+        <div class="form-row">
+          <div class="input-row"><label>Result</label><select class="pp-select" id="result-select"><option>Win</option><option>Loss</option></select></div>
+          <div class="input-row"><label>Score (e.g. 11-7, 11-5)</label><input class="pp-input" id="score-input" placeholder="Game scores separated by commas"/></div>
+        </div>
+        <div class="input-row"><label>Notes (optional)</label><input class="pp-input" placeholder="Any notes about the match..."/></div>
+        <button class="btn btn-lime" onclick="logMatch()">Submit Score</button>
+      </div>
+      <div class="form-section">
+        <div class="form-title">Rating Impact Preview</div>
+        <div style="display:flex;gap:1.5rem;flex-wrap:wrap">
+          <div style="text-align:center"><div style="font-size:0.78rem;color:var(--pp-gray);margin-bottom:0.3rem">Current</div><div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--pp-white)">4.15</div></div>
+          <div style="display:flex;align-items:center;color:var(--pp-gray)">→</div>
+          <div style="text-align:center"><div style="font-size:0.78rem;color:var(--pp-gray);margin-bottom:0.3rem">After Win vs 4.30</div><div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--pp-teal)">4.22</div></div>
+          <div style="text-align:center"><div style="font-size:0.78rem;color:var(--pp-gray);margin-bottom:0.3rem">After Loss vs 4.30</div><div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--pp-orange)">4.08</div></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="d-portfolio">
+      <div class="form-section">
+        <div class="form-title">Player Bio & Portfolio</div>
+        <div class="form-row">
+          <div class="input-row"><label>Display Name</label><input class="pp-input" value="Jake Dela Cruz"/></div>
+          <div class="input-row"><label>Username</label><input class="pp-input" value="@jakedc"/></div>
+        </div>
+        <div class="form-row">
+          <div class="input-row"><label>City</label><input class="pp-input" value="Cebu City"/></div>
+          <div class="input-row"><label>Home Club / Court</label><input class="pp-input" value="Cebu Pickle Club"/></div>
+        </div>
+        <div class="input-row"><label>Bio</label><textarea class="pp-input" rows="3">Open player based in Cebu. Love the dink game. Playing since 2022.</textarea></div>
+        <div class="form-row">
+          <div class="input-row"><label>Preferred Paddle</label><input class="pp-input" value="Joola Ben Johns Hyperion"/></div>
+          <div class="input-row"><label>Playing Style</label><select class="pp-select"><option>All-Court</option><option>Baseline Banger</option><option>Dink Master</option><option>Aggressive Attacker</option></select></div>
+        </div>
+        <div class="input-row"><label>Achievements / Highlights</label><textarea class="pp-input" rows="2" placeholder="Tournaments won, notable results...">2nd Place - Weekend Warrior Series #6 | Top 50 PH National Ranking</textarea></div>
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+          <button class="btn btn-lime" onclick="showNotif('Portfolio saved!')">Save Portfolio</button>
+          <button class="btn btn-ghost" onclick="showNotif('Profile link copied!')">Share Profile</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="d-settings">
+      <div class="form-section">
+        <div class="form-title">Account Settings</div>
+        <div class="form-row">
+          <div class="input-row"><label>Email</label><input class="pp-input" value="jake@email.com"/></div>
+          <div class="input-row"><label>Phone</label><input class="pp-input" value="+63 917 000 0000"/></div>
+        </div>
+        <div class="input-row"><label>New Password</label><input class="pp-input" type="password" placeholder="Leave blank to keep current"/></div>
+        <div style="margin-bottom:1rem">
+          <div style="font-size:0.85rem;font-weight:500;margin-bottom:0.75rem;color:var(--pp-gray)">Notifications</div>
+          <div style="display:flex;flex-direction:column;gap:0.5rem">
+            <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.88rem;cursor:pointer"><input type="checkbox" checked/> Tournament results & bracket updates</label>
+            <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.88rem;cursor:pointer"><input type="checkbox" checked/> Rating changes</label>
+            <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.88rem;cursor:pointer"><input type="checkbox"/> Marketplace messages</label>
+            <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.88rem;cursor:pointer"><input type="checkbox" checked/> Community posts & events</label>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+          <button class="btn btn-lime" onclick="showNotif('Settings updated!')">Save Changes</button>
+          <button class="btn btn-danger" onclick="showNotif('Account deletion requested')">Delete Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const players=[
+  {init:'MR',name:'Maria Reyes',handle:'@mariaspikey',city:'Cebu City',cat:'Open Women',rating:5.42,w:67,l:12,grad:'135deg,#00C9A7,#C6F135'},
+  {init:'JC',name:'Juan Cruz',handle:'@juansmash',city:'Manila',cat:'Open Men',rating:5.31,w:58,l:18,grad:'135deg,#FF6B35,#ff9f6b'},
+  {init:'AS',name:'Ana Santos',handle:'@anapet',city:'Davao',cat:'Mixed Doubles',rating:5.18,w:44,l:14,grad:'135deg,#534AB7,#8F86E8'},
+  {init:'BT',name:'Ben Torres',handle:'@bentorres',city:'QC',cat:'Men\'s Doubles',rating:5.05,w:51,l:22,grad:'135deg,#0F6E56,#1D9E75'},
+  {init:'LC',name:'Lia Chan',handle:'@liabird',city:'Cebu',cat:'Open Women',rating:4.89,w:39,l:17,grad:'135deg,#D4537E,#ED93B1'},
+  {init:'RG',name:'Rico Garcia',handle:'@picklerico',city:'Iloilo',cat:'Open Men',rating:4.77,w:33,l:19,grad:'135deg,#BA7517,#EF9F27'},
+  {init:'PD',name:'Paolo Diaz',handle:'@paosmash',city:'Cebu City',cat:'Open Men',rating:4.62,w:28,l:15,grad:'135deg,#185FA5,#378ADD'},
+  {init:'NR',name:'Nina Reyes',handle:'@ninaplay',city:'Manila',cat:'Open Women',rating:4.55,w:24,l:12,grad:'135deg,#A32D2D,#E24B4A'},
+];
+
+function buildPlayers(){
+  const el=document.getElementById('player-list');
+  el.innerHTML=players.map((p,i)=>`
+    <div class="lb-row">
+      <div class="lb-rank ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${i+1}</div>
+      <div class="avatar" style="width:44px;height:44px;font-size:0.88rem;background:linear-gradient(${p.grad})">${p.init}</div>
+      <div style="flex:1">
+        <div style="font-weight:600;font-size:0.9rem">${p.name} <span style="color:var(--pp-gray);font-weight:400;font-size:0.78rem">${p.handle}</span></div>
+        <div style="font-size:0.78rem;color:var(--pp-gray)">${p.city} · ${p.cat}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem">
+        <div style="font-size:0.78rem;color:var(--pp-gray);text-align:right"><div style="color:var(--pp-teal)">${p.w}W</div><div style="color:var(--pp-orange)">${p.l}L</div></div>
+        <div class="rating-badge">${p.rating}</div>
+      </div>
+    </div>`).join('');
+}
+
+function buildBracket(){
+  const rounds=[
+    {name:'Quarterfinals',matches:[
+      {a:'Maria R.',b:'Lia C.',sa:'11-7,11-5',sb:'',w:0},
+      {a:'Juan C.',b:'Rico G.',sa:'11-9,8-11,11-7',sb:'',w:0},
+      {a:'Ana S.',b:'Paolo D.',sa:'',sb:'',w:-1},
+      {a:'Ben T.',b:'Nina R.',sa:'',sb:'',w:-1},
+    ]},
+    {name:'Semifinals',matches:[
+      {a:'Maria R.',b:'Juan C.',sa:'',sb:'',w:-1},
+      {a:'TBD',b:'TBD',sa:'',sb:'',w:-1},
+    ]},
+    {name:'Final',matches:[
+      {a:'TBD',b:'TBD',sa:'',sb:'',w:-1},
+    ]},
+  ];
+  const c=document.getElementById('bracket-container');
+  c.innerHTML=rounds.map(r=>`
+    <div class="round">
+      <div class="round-title">${r.name}</div>
+      ${r.matches.map(m=>`
+        <div class="match">
+          <div class="match-box">
+            <div class="match-team ${m.w===0?'winner':''}">
+              <span>${m.a}</span>
+              <span class="score">${m.sa||'—'}</span>
+            </div>
+            <div class="match-team ${m.w===1?'winner':''}">
+              <span>${m.b}</span>
+              <span class="score">${m.sb||'—'}</span>
+            </div>
+          </div>
+        </div>`).join('')}
+    </div>
+    <div class="connector"></div>
+  `).join('');
+}
+
+function buildResults(){
+  const data=[
+    {name:'PicklePug Open 2024',winner:'Maria Reyes',date:'Nov 2024',prize:'₱45,000'},
+    {name:'Visayas Championship 2024',winner:'Juan Cruz',date:'Aug 2024',prize:'₱100,000'},
+    {name:'Weekend Warrior #7',winner:'Ana Santos',date:'Apr 2024',prize:'Trophy'},
+    {name:'PH National Open 2023',winner:'Ben Torres',date:'Dec 2023',prize:'₱75,000'},
+  ];
+  const el=document.getElementById('results-list');
+  el.innerHTML=data.map(d=>`
+    <div class="mh-row" style="padding:0.9rem 1.25rem">
+      <div style="flex:1;font-size:0.88rem;font-weight:500">${d.name}</div>
+      <div style="width:150px;font-size:0.85rem"><span class="win">${d.winner}</span></div>
+      <div style="width:100px;font-size:0.8rem;color:var(--pp-gray)">${d.date}</div>
+      <div style="width:80px;font-size:0.82rem;color:var(--pp-lime);text-align:right">${d.prize}</div>
+    </div>`).join('');
+}
+
+const galleryData=[
+  {emoji:'🏓',caption:'Final Match - PPO 2024',event:'PicklePug Open'},
+  {emoji:'🏆',caption:'Champions Ceremony',event:'Visayas Champ'},
+  {emoji:'📸',caption:'Group Photo Day 1',event:'Weekend Warrior'},
+  {emoji:'⚡',caption:'Epic rally of the day',event:'PPO 2024'},
+  {emoji:'🎾',caption:'Training Session Apr',event:'Training'},
+  {emoji:'🌅',caption:'Morning warm-up',event:'Club Play'},
+  {emoji:'👏',caption:'Award presentation',event:'Visayas Champ'},
+  {emoji:'🤝',caption:'Post-match handshake',event:'PPO 2024'},
+  {emoji:'🎽',caption:'Team gear drop',event:'PicklePug Open'},
+  {emoji:'🔥',caption:'Power serve clinic',event:'Training'},
+  {emoji:'🏅',caption:'Medal winners podium',event:'Weekend Warrior'},
+  {emoji:'🎯',caption:'Target dinking drill',event:'Training'},
+];
+function buildGallery(){
+  const el=document.getElementById('gallery-grid');
+  el.innerHTML=galleryData.map(g=>`
+    <div class="gallery-item" onclick="showNotif('Opening: ${g.caption}')">
+      <div class="thumb">${g.emoji}</div>
+      <div class="overlay"><div class="caption">${g.caption}<br><span style="color:var(--pp-lime);font-size:0.7rem">${g.event}</span></div></div>
+    </div>`).join('');
+}
+
+const shopItems=[
+  {emoji:'🏓',name:'Selkirk Vanguard Power Air',seller:'RickyPB',price:'₱6,500',cond:'Like New',badge:'badge-used',tag:'Used'},
+  {emoji:'🏓',name:'Joola Ben Johns Hyperion 16mm',seller:'MariaRey',price:'₱8,200',cond:'Brand New',badge:'badge-new',tag:'New'},
+  {emoji:'🏓',name:'Paddletek Bantam EX-L',seller:'JuanSmash',price:'₱3,800',cond:'Good',badge:'badge-used',tag:'Used'},
+  {emoji:'🎒',name:'Head Tour Team Pickleball Bag',seller:'AnaPlays',price:'₱2,200',cond:'Like New',badge:'badge-used',tag:'Used'},
+  {emoji:'🏓',name:'Franklin Sports X-40 Balls (12pk)',seller:'PicklePugStore',price:'₱950',cond:'Brand New',badge:'badge-new',tag:'New'},
+  {emoji:'🎽',name:'PicklePug Pro Jersey (M/L/XL)',seller:'PPOfficial',price:'₱850',cond:'Brand New',badge:'badge-new',tag:'New'},
+  {emoji:'🧢',name:'PicklePug Cap - Lime Edition',seller:'PPOfficial',price:'₱450',cond:'Brand New',badge:'badge-new',tag:'New'},
+  {emoji:'🏓',name:'Onix Graphite Z5 Paddle',seller:'BenTorres',price:'₱2,900',cond:'Good',badge:'badge-used',tag:'Used'},
+];
+function buildShop(){
+  const el=document.getElementById('shop-grid');
+  el.innerHTML=shopItems.map(p=>`
+    <div class="product-card">
+      <div class="product-thumb">${p.emoji}</div>
+      <div class="product-info">
+        <div class="product-name" style="font-size:0.85rem;line-height:1.3">${p.name}<span class="product-badge ${p.badge}">${p.tag}</span></div>
+        <div class="product-seller">by ${p.seller}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="product-price" style="font-size:1.3rem">${p.price}</div>
+          <button class="btn btn-lime btn-sm" onclick="showNotif('Added to cart!')" style="padding:0.3rem 0.7rem;font-size:0.75rem">Buy</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+const socialPosts=[
+  {init:'MR',name:'Maria Reyes',handle:'@mariaspikey',grad:'135deg,#00C9A7,#C6F135',time:'2h ago',body:'Just dropped a 5-0 in today\'s clinic session 🏓 The dinking game is strong right now. Who else is training for the PPO Open? Let\'s warm up together this weekend!',hasImg:true,imgEmoji:'🏓',likes:47,comments:12},
+  {init:'JC',name:'Juan Cruz',handle:'@juansmash',grad:'135deg,#FF6B35,#ff9f6b',time:'5h ago',body:'New paddle day! Just got the Joola Ben Johns Hyperion CFS. First impressions: insane pop, great control at the kitchen line. Will do a full review after 10 sessions.',hasImg:false,likes:83,comments:29},
+  {init:'PP',name:'PicklePug Official',handle:'@picklepug',grad:'135deg,#C6F135,#9DC219',time:'1d ago',body:'🚨 REMINDER: PicklePug Open 2025 registration closes in 5 DAYS. ₱50,000 prize pool on the line. Only 8 spots left in Open Men\'s Singles. Register now from the Tournaments tab!',hasImg:true,imgEmoji:'🏆',likes:204,comments:56},
+];
+function buildSocial(){
+  const el=document.getElementById('social-feed');
+  el.innerHTML=socialPosts.map(p=>`
+    <div class="post-card">
+      <div class="post-header">
+        <div class="avatar" style="background:linear-gradient(${p.grad});width:40px;height:40px;font-size:0.82rem">${p.init}</div>
+        <div><div style="font-weight:600;font-size:0.88rem">${p.name} <span style="color:var(--pp-gray);font-weight:400">${p.handle}</span></div><div style="font-size:0.75rem;color:var(--pp-gray)">${p.time}</div></div>
+      </div>
+      <div class="post-body">${p.body}</div>
+      ${p.hasImg?`<div class="post-img">${p.imgEmoji}</div>`:''}
+      <div class="post-actions">
+        <button class="action-btn" onclick="this.style.color='var(--pp-lime)'">♥ ${p.likes}</button>
+        <button class="action-btn">💬 ${p.comments}</button>
+        <button class="action-btn">↗ Share</button>
+      </div>
+    </div>`).join('');
+}
+
+const events=[
+  {day:'18',month:'MAY',name:'Sunset Doubles Mixer',loc:'Cebu Sports Complex Court 3',time:'4:00 PM – 7:00 PM',by:'JuanSmash',tag:'Open to all'},
+  {day:'24',month:'MAY',name:'Weekend Warrior Series #8',loc:'Mandaue City Public Courts',time:'7:00 AM – 5:00 PM',by:'PicklePug Official',tag:'Tournament'},
+  {day:'01',month:'JUN',name:'Beginner Bootcamp',loc:'SM Seaside Court',time:'9:00 AM – 12:00 PM',by:'CoachRonnie',tag:'Training'},
+];
+function buildEvents(){
+  const el=document.getElementById('events-list');
+  el.innerHTML=events.map(e=>`
+    <div class="event-card">
+      <div class="event-date"><div class="day">${e.day}</div><div class="month">${e.month}</div></div>
+      <div style="flex:1">
+        <div style="font-weight:600;font-size:0.92rem;margin-bottom:0.25rem">${e.name}</div>
+        <div style="font-size:0.8rem;color:var(--pp-gray);margin-bottom:0.3rem">📍 ${e.loc} · ⏰ ${e.time}</div>
+        <div style="font-size:0.78rem;color:var(--pp-gray)">Posted by ${e.by}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.4rem;align-items:flex-end">
+        <div style="background:rgba(198,241,53,0.1);border:1px solid rgba(198,241,53,0.2);border-radius:4px;padding:0.2rem 0.5rem;font-size:0.7rem;color:var(--pp-lime)">${e.tag}</div>
+        <button class="btn btn-ghost btn-sm" onclick="showNotif('RSVP confirmed!')">RSVP</button>
+      </div>
+    </div>`).join('');
+}
+
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+}
+
+function switchTab(prefix,id,btn){
+  const scope=btn?btn.closest('.page')||document:document;
+  scope.querySelectorAll('.tab-content[id^="'+prefix+'-"]').forEach(t=>t.classList.remove('active'));
+  scope.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  const el=document.getElementById(prefix+'-'+id);
+  if(el)el.classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+
+function showNotif(msg){
+  const n=document.getElementById('notif');
+  n.textContent='✓ '+msg;
+  n.classList.add('show');
+  setTimeout(()=>n.classList.remove('show'),2500);
+}
+
+function toggleEventFields(){
+  const t=document.getElementById('post-type').value;
+  document.getElementById('event-fields').style.display=t==='event'?'block':'none';
+}
+
+function logMatch(){
+  showNotif('Match logged! Rating updated to 4.22');
+}
+
+// Fix tab clicks to scope to page
+document.querySelectorAll('#page-tournaments .tab').forEach((btn,i)=>{
+  const ids=['upcoming','bracket','results','register'];
+  btn.onclick=()=>switchTab('t',ids[i],btn);
+});
+document.querySelectorAll('#page-shop .tab').forEach((btn,i)=>{
+  const ids=['browse','sell','orders'];
+  btn.onclick=()=>switchTab('s',ids[i],btn);
+});
+document.querySelectorAll('#page-social .tab').forEach((btn,i)=>{
+  const ids=['feed','events','post'];
+  btn.onclick=()=>switchTab('c',ids[i],btn);
+});
+document.querySelectorAll('#page-dashboard .tab').forEach((btn,i)=>{
+  const ids=['overview','scores','portfolio','settings'];
+  btn.onclick=()=>switchTab('d',ids[i],btn);
+});
+
+// Filter chips toggle
+document.querySelectorAll('.filter-chip').forEach(c=>{
+  c.addEventListener('click',()=>{
+    c.closest('.filter-bar').querySelectorAll('.filter-chip').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+  });
+});
+
+buildPlayers();buildBracket();buildResults();buildGallery();buildShop();buildSocial();buildEvents();
+</script>
+</body>
+</html>
