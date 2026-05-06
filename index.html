@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PicklePug Dumaguete — Negros Oriental Pickleball</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--pp-lime:#C6F135;--pp-lime-dark:#9DC219;--pp-navy:#0B1629;--pp-navy2:#162038;
+--pp-teal:#00C9A7;--pp-orange:#FF6B35;--pp-white:#F8FAF5;--pp-gray:#8A9BB0;
+--pp-card:#1A2942;--pp-border:rgba(198,241,53,0.15);--pp-border2:rgba(255,255,255,0.08);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--pp-navy);color:var(--pp-white);min-height:100vh;overflow-x:hidden;line-height:1.5}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+
+/* MOBILE FIRST */
+@media(max-width:768px){body{font-size:14px}}
+@media(max-width:480px){body{font-size:13px}}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 1rem;height:60px;background:rgba(11,22,41,0.98);backdrop-filter:blur(12px);border-bottom:1px solid var(--pp-border);position:sticky;top:0;z-index:100}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--pp-lime);letter-spacing:1.5px;cursor:pointer;flex-shrink:0}
+.logo span{color:var(--pp-white)}
+.nav-links{display:flex;gap:0.2rem;overflow-x:auto;padding:0.25rem 0;scrollbar-width:none;-ms-overflow-style:none}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-btn{background:none;border:none;color:var(--pp-gray);font-size:0.75rem;font-weight:500;padding:0.4rem 0.7rem;border-radius:6px;cursor:pointer;transition:all 0.2s;letter-spacing:0.3px;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+.nav-btn:hover,.nav-btn.active{color:var(--pp-lime);background:rgba(198,241,53,0.08)}
+.nav-right{display:flex;gap:0.25rem;align-items:center;flex-shrink:0}
+.btn{padding:0.4rem 1rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.8rem;cursor:pointer;transition:all 0.2s;border:none;flex-shrink:0}
+.btn-outline{background:transparent;border:1.5px solid var(--pp-border);color:var(--pp-white)}
+.btn-outline:hover{border-color:var(--pp-lime);color:var(--pp-lime)}
+.btn-lime{background:var(--pp-lime);color:var(--pp-navy);font-weight:700}
+.btn-lime:hover{background:var(--pp-lime-dark);transform:translateY(-1px)}
+.btn-sm{padding:0.3rem 0.8rem;font-size:0.75rem}
+.btn-teal{background:var(--pp-teal);color:var(--pp-navy);font-weight:700}
+.btn-orange{background:var(--pp-orange);color:#fff;font-weight:700}
+.btn-ghost{background:rgba(255,255,255,0.06);border:1px solid var(--pp-border2);color:var(--pp-white)}
+.btn-ghost:hover{background:rgba(255,255,255,0.12)}
+.btn-danger{background:rgba(255,60,60,0.15);border:1px solid rgba(255,60,60,0.3);color:#ff6b6b}
+
+/* PAGES */
+.page{display:none;animation:fadeIn 0.3s ease;padding:1rem}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+.hero{min-height:calc(100vh - 60px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem 1rem;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(0,201,167,0.12) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(198,241,53,0.1) 0%,transparent 50%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(198,241,53,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(198,241,53,0.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(198,241,53,0.1);border:1px solid rgba(198,241,53,0.3);border-radius:50px;padding:0.3rem 0.9rem;font-size:0.75rem;font-weight:600;color:var(--pp-lime);letter-spacing:1px;text-transform:uppercase;margin-bottom:1rem}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,8vw,5rem);line-height:1;letter-spacing:2px;margin-bottom:0.75rem}
+.hero h1 em{font-style:normal;color:var(--pp-lime)}
+.hero p{font-size:1rem;color:var(--pp-gray);max-width:500px;line-height:1.6;margin-bottom:2rem}
+.hero-ctas{display:flex;gap:0.75rem;flex-wrap:wrap;justify-content:center;max-width:400px;margin:0 auto}
+.hero-stats{display:flex;gap:1.5rem;margin-top:3rem;flex-wrap:wrap;justify-content:center}
+.hero-stat{text-align:center;min-width:80px}
+.hero-stat .num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--pp-lime)}
+.hero-stat .lbl{font-size:0.7rem;color:var(--pp-gray);letter-spacing:1px;text-transform:uppercase}
+
+/* SECTIONS */
+.section{padding:2rem 1rem;max-width:1200px;margin:0 auto}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:1.5px;margin-bottom:0.25rem}
+.section-sub{color:var(--pp-gray);margin-bottom:2rem;font-size:0.9rem}
+.section-title .accent{color:var(--pp-lime)}
+
+/* CARDS */
+.card{background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:16px;padding:1.25rem;transition:all 0.2s}
+.card:hover{border-color:var(--pp-border);transform:translateY(-2px)}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.75rem}
+
+/* RATING */
+.rating-badge{display:inline-block;background:var(--pp-lime);color:var(--pp-navy);font-family:'Bebas Neue',sans-serif;font-size:1.4rem;padding:0.1rem 0.6rem;border-radius:6px;letter-spacing:0.8px}
+.player-card{display:flex;gap:0.75rem;align-items:flex-start}
+.avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--pp-teal),var(--pp-lime));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;color:var(--pp-navy);flex-shrink:0}
+.player-info .name{font-weight:600;font-size:0.9rem;margin-bottom:0.15rem}
+.player-info .handle{color:var(--pp-gray);font-size:0.78rem}
+.stat-row{display:flex;gap:0.75rem;margin-top:0.5rem;flex-wrap:wrap}
+.stat-pill{background:rgba(255,255,255,0.05);border:1px solid var(--pp-border2);border-radius:6px;padding:0.2rem 0.5rem;font-size:0.75rem}
+.stat-pill span{color:var(--pp-lime);font-weight:600}
+
+/* TOURNAMENT BRACKET */
+.bracket-wrap{overflow-x:auto;padding-bottom:1rem}
+.bracket{display:flex;gap:0;align-items:stretch}
+.round{display:flex;flex-direction:column;justify-content:space-around;min-width:140px}
+.round-title{font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--pp-lime);text-align:center;padding:0.4rem 0.4rem 0.8rem;border-bottom:1px solid var(--pp-border);margin-bottom:0.4rem}
+.match{margin:0.3rem 0.4rem;position:relative}
+.match-box{background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:10px;overflow:hidden}
+.match-team{padding:0.4rem 0.6rem;font-size:0.78rem;display:flex;justify-content:space-between;align-items:center;gap:0.4rem;transition:background 0.15s}
+.match-team:first-child{border-bottom:1px solid var(--pp-border2)}
+.match-team.winner{background:rgba(198,241,53,0.1)}
+.match-team.winner .score{color:var(--pp-lime);font-weight:700}
+.score{font-size:0.75rem;color:var(--pp-gray);min-width:22px;text-align:right}
+.connector{width:18px;flex-shrink:0;position:relative}
+
+/* GALLERY */
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0.75rem}
+.gallery-item{border-radius:12px;overflow:hidden;aspect-ratio:1; background:var(--pp-card);border:1px solid var(--pp-border2);position:relative;cursor:pointer;transition:all 0.2s}
+.gallery-item:hover{transform:scale(1.02);border-color:var(--pp-lime)}
+.gallery-item .thumb{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem}
+.gallery-item .overlay{position:absolute;inset:0;background:linear-gradient(transparent 50%,rgba(0,0,0,0.7));display:flex;align-items:flex-end;padding:0.6rem;opacity:0;transition:opacity 0.2s}
+.gallery-item:hover .overlay{opacity:1}
+.gallery-item .caption{font-size:0.75rem;font-weight:500}
+
+/* SHOP */
+.product-card{background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:16px;overflow:hidden;transition:all 0.2s}
+.product-card:hover{border-color:var(--pp-border);transform:translateY(-3px)}
+.product-thumb{height:140px;display:flex;align-items:center;justify-content:center;font-size:3rem;background:rgba(255,255,255,0.03);border-bottom:1px solid var(--pp-border2)}
+.product-info{padding:1rem}
+.product-name{font-weight:600;margin-bottom:0.25rem;font-size:0.85rem}
+.product-seller{font-size:0.78rem;color:var(--pp-gray);margin-bottom:0.4rem}
+.product-price{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--pp-lime)}
+.product-badge{display:inline-block;font-size:0.68rem;padding:0.15rem 0.4rem;border-radius:4px;margin-left:0.4rem;font-weight:600;vertical-align:middle}
+.badge-new{background:rgba(0,201,167,0.15);color:var(--pp-teal)}
+.badge-used{background:rgba(255,107,53,0.15);color:var(--pp-orange)}
+
+/* SOCIAL */
+.post-card{background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:16px;padding:1rem;margin-bottom:1rem}
+.post-header{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem}
+.post-body{font-size:0.88rem;line-height:1.6;color:rgba(248,250,245,0.9);margin-bottom:0.75rem}
+.post-img{width:100%;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid var(--pp-border2);height:160px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin-bottom:0.75rem}
+.post-actions{display:flex;gap:0.5rem;flex-wrap:wrap}
+.action-btn{background:rgba(255,255,255,0.04);border:1px solid var(--pp-border2);color:var(--pp-gray);padding:0.3rem 0.75rem;border-radius:8px;font-size:0.78rem;cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif;flex:1;min-width:70px}
+.action-btn:hover{background:rgba(198,241,53,0.08);border-color:rgba(198,241,53,0.3);color:var(--pp-lime)}
+.event-card{background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:12px;padding:1rem;display:flex;gap:0.75rem;align-items:flex-start;margin-bottom:0.75rem;flex-wrap:wrap}
+.event-date{background:rgba(198,241,53,0.1);border:1px solid rgba(198,241,53,0.2);border-radius:10px;padding:0.4rem 0.75rem;text-align:center;flex-shrink:0}
+.event-date .day{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--pp-lime);line-height:1}
+.event-date .month{font-size:0.68rem;color:var(--pp-gray);text-transform:uppercase;letter-spacing:1px}
+
+/* DASHBOARD */
+.dash-grid{display:grid;grid-template-columns:1fr;gap:1rem}
+@media(min-width:680px){.dash-grid{grid-template-columns:1fr 2fr}}
+.stat-card{background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:12px;padding:1rem;text-align:center}
+.stat-card .val{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--pp-lime)}
+.stat-card .lbl{font-size:0.75rem;color:var(--pp-gray);text-transform:uppercase;letter-spacing:0.8px}
+.input-row{display:flex;flex-direction:column;gap:0.35rem;margin-bottom:0.75rem}
+.input-row label{font-size:0.8rem;color:var(--pp-gray);font-weight:500}
+.pp-input{background:rgba(255,255,255,0.05);border:1px solid var(--pp-border2);border-radius:8px;padding:0.55rem 0.85rem;color:var(--pp-white);font-family:'DM Sans',sans-serif;font-size:0.88rem;width:100%;outline:none;transition:border-color 0.2s}
+.pp-input:focus{border-color:var(--pp-lime)}
+.pp-select{background:rgba(11,22,41,0.9);border:1px solid var(--pp-border2);border-radius:8px;padding:0.55rem 0.85rem;color:var(--pp-white);font-family:'DM Sans',sans-serif;font-size:0.88rem;width:100%;outline:none}
+.match-history{background:rgba(255,255,255,0.02);border-radius:10px;overflow:hidden}
+.mh-row{display:flex;justify-content:space-between;align-items:center;padding:0.65rem 1rem;border-bottom:1px solid var(--pp-border2);font-size:0.82rem}
+.mh-row:last-child{border-bottom:none}
+.win{color:var(--pp-teal);font-weight:600}
+.loss{color:var(--pp-orange);font-weight:600}
+
+/* TABS */
+.tabs{display:flex;gap:0.2rem;margin-bottom:1.25rem;background:rgba(255,255,255,0.03);border-radius:10px;padding:0.2rem;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{background:none;border:none;color:var(--pp-gray);font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:500;padding:0.45rem 1rem;border-radius:8px;cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0}
+.tab.active{background:var(--pp-lime);color:var(--pp-navy);font-weight:700}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* FORM */
+.form-section{background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:16px;padding:1.25rem;margin-bottom:1rem}
+.form-title{font-size:0.95rem;font-weight:600;margin-bottom:1rem;color:var(--pp-white)}
+.form-row{display:grid;grid-template-columns:1fr;gap:0.75rem}
+@media(min-width:480px){.form-row{grid-template-columns:1fr 1fr}}
+
+/* LOGIN MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center;padding:1rem}
+.modal.active{display:flex}
+.modal-content{background:var(--pp-card);border:1px solid var(--pp-border);border-radius:20px;padding:2rem;max-width:400px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-close{position:absolute;top:1rem;right:1.5rem;font-size:1.5rem;cursor:pointer;color:var(--pp-gray)}
+.dupr-badge{background:linear-gradient(135deg,#00C9A7,#C6F135);color:#0B1629;font-weight:700;padding:0.3rem 0.8rem;border-radius:20px;font-size:0.75rem;display:inline-flex;align-items:center;gap:0.3rem}
+
+/* NOTIFICATION */
+.notif{position:fixed;bottom:1rem;right:1rem;background:var(--pp-lime);color:var(--pp-navy);font-weight:700;padding:0.75rem 1.25rem;border-radius:10px;font-size:0.85rem;transform:translateY(100px);transition:transform 0.3s;z-index:999;max-width:300px}
+.notif.show{transform:translateY(0)}
+
+/* PROFILE HEADER */
+.profile-header{background:linear-gradient(135deg,var(--pp-navy2),rgba(0,201,167,0.15));border:1px solid var(--pp-border);border-radius:20px;padding:1.5rem;display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.25rem;flex-wrap:wrap}
+.profile-avatar{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,var(--pp-orange),var(--pp-lime));display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--pp-navy);flex-shrink:0;border:3px solid var(--pp-lime)}
+.profile-meta{flex:1}
+.profile-meta h2{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:1px;margin-bottom:0.2rem}
+.profile-meta p{color:var(--pp-gray);font-size:0.85rem;margin-bottom:0.6rem}
+
+/* FILTER BAR */
+.filter-bar{display:flex;gap:0.25rem;flex-wrap:wrap;margin-bottom:1.25rem;overflow-x:auto;padding:0.25rem 0;scrollbar-width:none;-ms-overflow-style:none}
+.filter-bar::-webkit-scrollbar{display:none}
+.filter-chip{background:rgba(255,255,255,0.04);border:1px solid var(--pp-border2);border-radius:20px;padding:0.3rem 0.8rem;font-size:0.78rem;cursor:pointer;transition:all 0.15s;color:var(--pp-gray);white-space:nowrap;flex-shrink:0}
+.filter-chip:hover,.filter-chip.active{background:rgba(198,241,53,0.1);border-color:rgba(198,241,53,0.3);color:var(--pp-lime)}
+
+/* LEADERBOARD */
+.lb-row{display:flex;align-items:center;gap:0.75rem;padding:0.85rem 1rem;border-bottom:1px solid var(--pp-border2);transition:background 0.15s;flex-wrap:wrap}
+.lb-row:hover{background:rgba(255,255,255,0.02)}
+.lb-rank{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;width:28px;text-align:center;color:var(--pp-gray);flex-shrink:0}
+.lb-rank.gold{color:#FFD700}.lb-rank.silver{color:#C0C0C0}.lb-rank.bronze{color:#CD7F32}
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem}
+
+/* UPLOAD PREVIEW */
+.upload-preview{position:relative;display:inline-block;margin-top:0.75rem}
+.upload-preview img{max-width:200px;max-height:200px;border-radius:12px;border:2px solid var(--pp-border);object-fit:cover}
+.upload-remove{position:absolute;top:-8px;right:-8px;background:var(--pp-orange);color:white;border:none;border-radius:50%;width:24px;height:24px;font-size:0.8rem;cursor:pointer}
+</style>
+</head>
+<body>
+<h2 class="sr-only">PicklePug Dumaguete — Negros Oriental Pickleball Community</h2>
+
+<!-- NAV -->
+<nav>
+  <div class="logo" onclick="showPage('home')">PICKLE<span>PUG</span></div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showPage('home',this)">Home</button>
+    <button class="nav-btn" onclick="showPage('players',this)">Players</button>
+    <button class="nav-btn" onclick="showPage('tournaments',this)">Tournaments</button>
+    <button class="nav-btn" onclick="showPage('gallery',this)">Gallery</button>
+    <button class="nav-btn" onclick="showPage('shop',this)">Shop</button>
+    <button class="nav-btn" onclick="showPage('social',this)">Social</button>
+    <button class="nav-btn" onclick="showPage('dashboard',this)">Dashboard</button>
+  </div>
+  <div class="nav-right" id="nav-right">
+    <button class="btn btn-outline btn-sm" onclick="showLogin()">Log In</button>
+    <button class="btn btn-lime btn-sm" onclick="showRegister()">Join Free</button>
+  </div>
+</nav>
+
+<!-- LOGIN MODAL -->
+<div class="modal" id="login-modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="hideModal()">&times;</button>
+    <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;margin-bottom:1rem;text-align:center">Welcome Back</h3>
+    <div class="input-row"><label>Email</label><input class="pp-input" id="login-email" placeholder="your@email.com" type="email"/></div>
+    <div class="input-row"><label>Password</label><input class="pp-input" id="login-password" placeholder="••••••••" type="password"/></div>
+    <button class="btn btn-lime" style="width:100%;margin-top:0.5rem" onclick="loginUser()">Log In</button>
+    <div style="text-align:center;margin-top:1rem">
+      <div class="dupr-badge" onclick="connectDUPR()" style="cursor:pointer;margin-bottom:0.5rem">🔗 Connect DUPR Rating</div>
+      <a href="#" onclick="showRegister();return false" style="color:var(--pp-gray);font-size:0.8rem">Create Account</a>
+    </div>
+  </div>
+</div>
+
+<!-- REGISTER MODAL -->
+<div class="modal" id="register-modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="hideModal()">&times;</button>
+    <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;margin-bottom:1rem;text-align:center">Join PicklePug</h3>
+    <div class="input-row"><label>Full Name</label><input class="pp-input" id="reg-name" placeholder="Your full name"/></div>
+    <div class="input-row"><label>Email</label><input class="pp-input" id="reg-email" placeholder="your@email.com" type="email"/></div>
+    <div class="input-row"><label>Password</label><input class="pp-input" id="reg-password" placeholder="••••••••" type="password"/></div>
+    <div class="input-row"><label>Category</label>
+      <select class="pp-select" id="reg-category">
+        <option value="">Select Category</option>
+        <optgroup label="🥇 CATEGORY A">
+          <option>Neil Tinaytina</option><option>Emmanuel Lacuesta</option><option>Marvin V. Salvoro</option>
+          <option>Jiselle Marie Señagan</option><option>Chabby Joven</option><option>Sam L. Deniel</option>
+          <option>Markzzz Aya</option><option>Jasper Jeff</option><option>Kathreen Ryan</option>
+          <option>Van Pabs</option><option>Broweee Zyth</option><option>JapEth Morris</option>
+          <option>Karl Rod</option>
+        </optgroup>
+        <optgroup label="🥈 CATEGORY B">
+          <option>Eliver Shan</option><option>Podel JB</option><option>Max Stephen</option>
+          <option>Samarah Rosebert</option><option>Donna Roberto</option><option>Jeleebe Neil B.</option>
+          <option>Kit Ian Fritz</option><option>Rosenda Ariane</option><option>Mara Borie</option>
+          <option>DJ RV</option><option>Jennymae Shelot</option>
+        </optgroup>
+        <optgroup label="🥉 CATEGORY C">
+          <option>Christine Alyssa</option><option>Yen Dennis</option><option>Floyd Ma. Sheila</option>
+          <option>Ingrid Karole</option><option>JAM Bb Jiam</option><option>Junry Doll</option>
+          <option>Chanson Kate</option><option>Zyl Haydee</option>
+        </optgroup>
+      </select>
+    </div>
+    <button class="btn btn-lime" style="width:100%;margin-top:0.5rem" onclick="registerUser()">Create Account</button>
+  </div>
+</div>
+
+<!-- NOTIFICATION -->
+<div class="notif" id="notif">✓ Saved!</div>
+
+<!-- HOME PAGE -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-badge">🏓 Dumaguete City #1 Pickleball Platform</div>
+    <h1>PLAY. RANK.<br><em>DOMINATE.</em></h1>
+    <p>Negros Oriental's pickleball hub. Track DUPR ratings, compete in local tournaments, buy/sell gear, and connect with Dumaguete players.</p>
+    <div class="hero-ctas">
+      <button class="btn btn-lime" onclick="showPage('dashboard')">Get Your Rating</button>
+      <button class="btn btn-ghost" onclick="showPage('tournaments')">View Tournaments</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">156+</div><div class="lbl">Dumaguete Players</div></div>
+      <div class="hero-stat"><div class="num">12+</div><div class="lbl">Local Tournaments</div></div>
+      <div class="hero-stat"><div class="num">3</div><div class="lbl">Courts</div></div>
+    </div>
+  </div>
+  
+  <div class="section">
+    <div class="top-bar">
+      <div><div class="section-title">TOP <em class="accent">DUMAGUETE</em> PLAYERS</div><div class="section-sub">Negros Oriental PicklePug rating leaderboard</div></div>
+      <button class="btn btn-ghost btn-sm" onclick="showPage('players')">View All →</button>
+    </div>
+    <div style="background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:16px;overflow:hidden">
+      <div id="top-players-home"></div>
+    </div>
+  </div>
+
+  <div class="section" style="padding-top:0">
+    <div class="grid-3">
+      <div class="card" style="border-color:rgba(0,201,167,0.2);cursor:pointer" onclick="showPage('tournaments')">
+        <div style="font-size:2rem;margin-bottom:0.75rem">🏆</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;margin-bottom:0.35rem">Tournaments</div>
+        <div style="color:var(--pp-gray);font-size:0.85rem;line-height:1.5">Local competitions with DUPR scoring at Dumaguete courts.</div>
+        <div style="margin-top:1rem;color:var(--pp-teal);font-size:0.83rem;font-weight:600">2 upcoming →</div>
+      </div>
+      <div class="card" style="border-color:rgba(198,241,53,0.2);cursor:pointer" onclick="showPage('gallery')">
+        <div style="font-size:2rem;margin-bottom:0.75rem">📸</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;margin-bottom:0.35rem">Gallery</div>
+        <div style="color:var(--pp-gray);font-size:0.85rem;line-height:1.5">Upload & share your pickleball moments from Negros Oriental.</div>
+        <div style="margin-top:1rem;color:var(--pp-lime);font-size:0.83rem;font-weight:600">Upload now →</div>
+      </div>
+      <div class="card" style="border-color:rgba(255,107,53,0.2);cursor:pointer" onclick="showPage('social')">
+        <div style="font-size:2rem;margin-bottom:0.75rem">📣</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;margin-bottom:0.35rem">Community</div>
+        <div style="color:var(--pp-gray);font-size:0.85rem;line-height:1.5">Connect with Dumaguete players, post events, share tips.</div>
+        <div style="margin-top:1rem;color:var(--pp-orange);font-size:0.83rem;font-weight:600">Join the feed →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PLAYERS PAGE -->
+<div class="page" id="page-players">
+  <div class="section">
+    <div class="top-bar">
+      <div><div class="section-title">DUMAGUETE <em class="accent">PLAYERS</em></div><div class="section-sub">Negros Oriental rated players by category</div></div>
+      <button class="btn btn-lime btn-sm" onclick="if(isLoggedIn)showPage('dashboard');else showLogin()">My Profile →</button>
+    </div>
+    <div class="filter-bar">
+      <div class="filter-chip active" data-filter="all">All Players</div>
+      <div class="filter-chip" data-filter="A">🥇 Category A</div>
+      <div class="filter-chip" data-filter="B">🥈 Category B</div>
+      <div class="filter-chip" data-filter="C">🥉 Category C</div>
+    </div>
+    <div style="background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:16px;overflow:hidden">
+      <div style="padding:1rem;border-bottom:1px solid var(--pp-border2)">
+        <input class="pp-input" id="player-search" placeholder="🔍 Search players by name..." style="max-width:100%"/>
+      </div>
+      <div id="player-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOURNAMENTS PAGE -->
+<div class="page" id="page-tournaments">
+  <div class="section">
+    <div class="section-title">DUMAGUETE <em class="accent">TOURNAMENTS</em></div>
+    <div class="section-sub">Local brackets with official DUPR scoring</div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('t','upcoming',this)">Upcoming</button>
+      <button class="tab" onclick="switchTab('t','results',this)">Results</button>
+    </div>
+    
+    <div class="tab-content active" id="t-upcoming">
+      <div class="grid-2">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem">
+            <div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.25rem;letter-spacing:1px">Dumaguete Open 2025</div><div style="font-size:0.78rem;color:var(--pp-gray)">📍 Silliman University Courts</div></div>
+            <div style="background:rgba(198,241,53,0.1);border:1px solid rgba(198,241,53,0.2);border-radius:6px;padding:0.25rem 0.5rem;font-size:0.7rem;color:var(--pp-lime);font-weight:600">OPEN</div>
+          </div>
+          <div style="font-size:0.82rem;color:var(--pp-gray);margin-bottom:1rem;line-height:1.5">📅 June 7–8, 2025 &nbsp;|&nbsp; 🏆 ₱25,000 prize pool &nbsp;|&nbsp; 32 players</div>
+          <button class="btn btn-lime btn-sm" onclick="if(isLoggedIn)showNotif('Registered for Dumaguete Open!');else showLogin()">Register Now</button>
+        </div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem">
+            <div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.25rem;letter-spacing:1px">Negros Oriental League #3</div><div style="font-size:0.78rem;color:var(--pp-gray)">📍 Dumaguete Sports Complex</div></div>
+            <div style="background:rgba(0,201,167,0.1);border:1px solid rgba(0,201,167,0.2);border-radius:6px;padding:0.25rem 0.5rem;font-size:0.7rem;color:var(--pp-teal);font-weight:600">LEAGUE</div>
+          </div>
+          <div style="font-size:0.82rem;color:var(--pp-gray);margin-bottom:1rem;line-height:1.5">📅 May 31, 2025 &nbsp;|&nbsp; 🏆 Trophies + Merch &nbsp;|&nbsp; Category teams</div>
+          <button class="btn btn-lime btn-sm" onclick="if(isLoggedIn)showNotif('Team registration sent!');else showLogin()">Join Team</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="t-results">
+      <div style="background:var(--pp-card);border:1px solid var(--pp-border2);border-radius:16px;overflow:hidden">
+        <div style="padding:1rem 1rem;border-bottom:1px solid var(--pp-border2);font-weight:600;font-size:0.88rem;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:1rem">
+          <span>Tournament</span><span>Winner</span><span>Category</span><span>Date</span>
+        </div>
+        <div id="results-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GALLERY PAGE -->
+<div class="page" id="page-gallery">
+  <div class="section">
+    <div class="top-bar">
+      <div><div class="section-title">DUMAGUETE <em class="accent">GALLERY</em></div><div class="section-sub">Upload your pickleball moments from Negros Oriental</div></div>
+      <button class="btn btn-lime btn-sm" onclick="if(isLoggedIn)document.getElementById('gallery-upload').click();else showLogin()">📤 Upload Photo</button>
+    </div>
+    <div class="filter-bar">
+      <div class="filter-chip active">All Photos</div>
+      <div class="filter-chip">Tournaments</div>
+      <div class="filter-chip">Training</div>
+      <div class="filter-chip">2025</div>
+    </div>
+    <div class="gallery-grid" id="gallery-grid"></div>
+    <input type="file" id="gallery-upload" accept="image/*" style="display:none" onchange="uploadPhoto(this)"/>
+  </div>
+</div>
+
+<!-- SHOP PAGE -->
+<div class="page" id="page-shop">
+  <div class="section">
+    <div class="section-title">DUMAGUETE <em class="accent">MARKETPLACE</em></div>
+    <div class="section-sub">Local gear trading for Negros Oriental players</div>
+    <div class="grid-4" id="shop-grid"></div>
+  </div>
+</div>
+
+<!-- SOCIAL PAGE -->
+<div class="page" id="page-social">
+  <div class="section">
+    <div class="section-title">DUMAGUETE <em class="accent">FEED</em></div>
+    <div class="section-sub">Connect with Negros Oriental pickleball players</div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('c','feed',this)">Feed</button>
+      <button class="tab" onclick="switchTab('c','events',this)">Events</button>
+      <button class="tab" onclick="switchTab('c','post',this)">Post</button>
+    </div>
+    
+    <div class="tab-content active" id="c-feed">
+      <div id="social-feed"></div>
+    </div>
+    
+    <div class="tab-content" id="c-events">
+      <div id="events-list"></div>
+    </div>
+    
+    <div class="tab-content" id="c-post">
+      <div class="form-section">
+        <div class="form-title">Share with Dumaguete Players</div>
+        <div class="input-row">
+          <label>Post Type</label>
+          <select class="pp-select" id="post-type" onchange="toggleEventFields()">
+            <option value="post">Photo Moment</option>
+            <option value="event">Court Booking/Event</option>
+          </select>
+        </div>
+        <div id="event-fields" style="display:none">
+          <div class="input-row"><label>Date & Time</label><input class="pp-input" type="datetime-local"/></div>
+          <div class="input-row"><label>Location</label><input class="pp-input" placeholder="Court name in Dumaguete"/></div>
+        </div>
+        <div class="input-row"><label>Photo (optional)</label><input type="file" id="post-photo" accept="image/*" style="padding:0.55rem"/><div id="post-preview"></div></div>
+        <div class="input-row"><label>Caption</label><textarea class="pp-input" rows="3" id="post-caption" placeholder="Share your pickleball moment..."></textarea></div>
+        <button class="btn btn-lime" onclick="publishPost()" style="width:100%">Publish to Feed</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD PAGE -->
+<div class="page" id="page-dashboard">
+  <div class="section">
+    <div class="section-title">YOUR <em class="accent">DASHBOARD</em></div>
+    <div class="section-sub">Manage your DUPR rating and Negros Oriental profile</div>
+    
+    <div class="profile-header" id="profile-header" style="display:none">
+      <div class="profile-avatar" id="profile-avatar">JD</div>
+      <div class="profile-meta">
+        <h2 id="profile-name">Player Name</h2>
+        <p id="profile-info">@handle · Dumaguete City · Category A</p>
+        <div class="stat-row">
+          <div class="stat-pill">DUPR <span id="profile-dupr">4.25</span></div>
+          <div class="stat-pill">W/L <span id="profile-wl">12/5</span></div>
+          <div class="stat-pill">Rank <span id="profile-rank">#3</span></div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="editProfile()">Edit Profile</button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('d','overview',this)">Overview</button>
+      <button class="tab" onclick="switchTab('d','logmatch',this)">Log Match</button>
+    </div>
+    
+    <div class="tab-content active" id="d-overview">
+      <div class="grid-4" style="margin-bottom:1rem">
+        <div class="stat-card"><div class="val" id="dash-rating">4.25</div><div class="lbl">DUPR Rating</div></div>
+        <div class="stat-card"><div class="val" id="dash-wins">12</div><div class="lbl">Wins</div></div>
+        <div class="stat-card"><div class="val" id="dash-winrate">70.6%</div><div class="lbl">Win Rate</div></div>
+        <div class="stat-card"><div class="val" id="dash-rank">#3</div><div class="lbl">Dumaguete Rank</div></div>
+      </div>
+      <div class="match-history">
+        <div class="mh-row"><div><div style="font-size:0.85rem;font-weight:500">vs. Neil Tinaytina</div><div style="font-size:0.75rem;color:var(--pp-gray)">Dumaguete Open · May 10</div></div><div style="text-align:right"><div class="win">WIN</div><div style="font-size:0.75rem;color:var(--pp-gray)">11-8, 11-6</div></div></div>
+        <div class="mh-row"><div><div style="font-size:0.85rem;font-weight:500">vs. Marvin Salvoro</div><div style="font-size:0.75rem;color:var(--pp-gray)">League Match · May 5</div></div><div style="text-align:right"><div class="loss">LOSS</div><div style="font-size:0.75rem;color:var(--pp-gray)">9-11, 11-9, 8-11</div></div></div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="d-logmatch">
+      <div class="form-section">
+        <div class="form-title">Log DUPR Match (Dumaguete)</div>
+        <div class="form-row">
+          <div class="input-row"><label>Opponent</label><input class="pp-input" id="match-opponent" placeholder="e.g. Neil Tinaytina"/></div>
+          <div class="input-row"><label>Opponent DUPR</label><input class="pp-input" id="match-opponent-rating" placeholder="e.g. 4.50" type="number" step="0.01"/></div>
+        </div>
+        <div class="form-row">
+          <div class="input-row"><label>Result</label><select class="pp-select" id="match-result"><option>Win</option><option>Loss</option></select></div>
+          <div class="input-row"><label>Scores</label><input class="pp-input" id="match-scores" placeholder="11-8, 11-6"/></div>
+        </div>
+        <div class="input-row"><label>Court</label><input class="pp-input" id="match-court" placeholder="Silliman University / Sports Complex"/></div>
+        <button class="btn btn-lime" onclick="logMatch()" style="width:100%">Submit to DUPR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// USER SYSTEM
+let currentUser = null;
+let isLoggedIn = false;
+let galleryImages = [];
+
+// DUMAGUETE PLAYERS DATA
+const dumaguetePlayers = [
+  {name:'Neil Tinaytina', category:'A', rating:5.12, wins:28, losses:6, city:'Dumaguete', dupr:'https://www.dupr.com/profile/neil-tinaytina'},
+  {name:'Emmanuel Lacuesta', category:'A', rating:4.98, wins:25, losses:8, city:'Dumaguete', dupr:'https://www.dupr.com/profile/emmanuel-lacuesta'},
+  {name:'Marvin V. Salvoro', category:'A', rating:4.85, wins:22, losses:7, city:'Dumaguete', dupr:'https://www.dupr.com/profile/marvin-salvoro'},
+  {name:'Jiselle Marie Señagan', category:'A', rating:4.72, wins:19, losses:5, city:'Dumaguete', dupr:'https://www.dupr.com/profile/jiselle-senagan'},
+  {name:'Chabby Joven', category:'A', rating:4.65, wins:18, losses:9, city:'Dumaguete', dupr:'https://www.dupr.com/profile/chabby-joven'},
+  {name:'Sam L. Deniel', category:'A', rating:4.58, wins:16, losses:4, city:'Dumaguete', dupr:'https://www.dupr.com/profile/sam-deniel'},
+  {name:'Markzzz Aya', category:'A', rating:4.52, wins:15, losses:6, city:'Dumaguete', dupr:'https://www.dupr.com/profile/markzzz-aya'},
+  {name:'Jasper Jeff', category:'A', rating:4.48, wins:14, losses:7, city:'Dumaguete', dupr:'https://www.dupr.com/profile/jasper-jeff'},
+  {name:'Kathreen Ryan', category:'A', rating:4.42, wins:13, losses:5, city:'Dumaguete', dupr:'https://www.dupr.com/profile/kathreen-ryan'},
+  {name:'Van Pabs', category:'A', rating:4.38, wins:12, losses:8, city:'Dumaguete', dupr:'https://www.dupr.com/profile/van-pabs'},
+  {name:'Broweee Zyth', category:'A', rating:4.35, wins:11, losses:6, city:'Dumaguete', dupr:'https://www.dupr.com/profile/broweee-zyth'},
+  {name:'JapEth Morris', category:'A', rating:4.32, wins:10, losses:9, city:'Dumaguete', dupr:'https://www.dupr.com/profile/japeth-morris'},
+  {name:'Karl Rod', category:'A', rating:4.28, wins:9, losses:7, city:'Dumaguete', dupr:'https://www.dupr.com/profile/karl-rod'},
+  // Category B players...
+  {name:'Eliver Shan', category:'B', rating:4.15, wins:18, losses:10, city:'Dumaguete', dupr:'https://www.dupr.com/profile/eliver-shan'},
+  {name:'Podel JB', category:'B', rating:4.08, wins:16, losses:12, city:'Dumaguete', dupr:'https://www.dupr.com/profile/podel-jb'},
+  // Add more Category B & C players...
+];
+
+// AUTH FUNCTIONS
+function showLogin() { document.getElementById('login-modal').classList.add('active'); }
+function showRegister() { hideModal(); document.getElementById('register-modal').classList.add('active'); }
+function hideModal() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); }
+
+function loginUser() {
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  if (email && password) {
+    currentUser = { email, name: 'Neil Tinaytina', category: 'A', rating: 4.85, handle: '@neiltinaytina' };
+    isLoggedIn = true;
+    updateUIForLogin();
+    hideModal();
+    showNotif('Welcome back, Neil! DUPR connected.');
+    showPage('dashboard');
+  } else {
+    showNotif('Please enter email & password');
+  }
+}
+
+function registerUser() {
+  const name = document.getElementById('reg-name').value;
+  const email = document.getElementById('reg-email').value;
+  const password = document.getElementById('reg-password').value;
+  const category = document.getElementById('reg-category').value;
+  if (name && email && password && category) {
+    currentUser = { name, email, category, rating: 3.50, handle: `@${name.toLowerCase().replace(' ','')}` };
+    isLoggedIn = true;
+    updateUIForLogin();
+    hideModal();
+    showNotif(`Welcome to PicklePug, ${name}! Connect your DUPR rating.`);
+    showPage('dashboard');
+  } else {
+    showNotif('Please fill all fields');
+  }
+}
+
+function connectDUPR() {
+  showNotif('🔗 Redirecting to DUPR.com to link your official rating...');
+  setTimeout(() => window.open('https://www.dupr.com/', '_blank'), 1000);
+}
+
+function updateUIForLogin() {
+  document.getElementById('nav-right').innerHTML = `
+    <div style="display:flex;align-items:center;gap:0.5rem;color:var(--pp-lime);font-weight:600;font-size:0.8rem">
+      <div class="avatar" style="width:32px;height:32px;font-size:0.7rem">${currentUser.handle.slice(1,3)}</div>
+      ${currentUser.name}
+    </div>
+    <button class="btn btn-danger btn-sm" onclick="logout()">Logout</button>
+  `;
+  updateProfileHeader();
+}
+
+function logout() {
+  currentUser = null;
+  isLoggedIn = false;
+  document.getElementById('nav-right').innerHTML = `
+    <button class="btn btn-outline btn-sm" onclick="showLogin()">Log In</button>
+    <button class="btn btn-lime btn-sm" onclick="showRegister()">Join Free</button>
+  `;
+  document.getElementById('profile-header').style.display = 'none';
+  showNotif('Logged out successfully');
+  showPage('home');
+}
+
+function updateProfileHeader() {
+  document.getElementById('profile-header').style.display = 'flex';
+  document.getElementById('profile-avatar').textContent = currentUser.handle.slice(1,3).toUpperCase();
+  document.getElementById('profile-name').textContent = currentUser.name;
+  document.getElementById('profile-info').textContent = `${currentUser.handle} · Dumaguete City · ${currentUser.category}`;
+  document.getElementById('profile-dupr').textContent = currentUser.rating;
+}
+
+// PAGE FUNCTIONS
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+}
+
+function switchTab(prefix,id,btn){
+  const scope=btn.closest('.page')||document;
+  scope.querySelectorAll(`.tab-content[id^="${prefix}-"]`).forEach(t=>t.classList.remove('active'));
+  scope.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(prefix+'-'+id)?.classList.add('active');
+  btn.classList.add('active');
+}
+
+function showNotif(msg){
+  const n=document.getElementById('notif');
+  n.textContent='✓ '+msg;
+  n.classList.add('show');
+  setTimeout(()=>n.classList.remove('show'),3000);
+}
+
+// PLAYER LIST
+function buildPlayers(filter = 'all', search = '') {
+  const el = document.getElementById('player-list');
+  let filtered = dumaguetePlayers.filter(p => 
+    (filter === 'all' || p.category === filter) &&
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
+  
+  filtered.sort((a,b) => b.rating - a.rating);
+  
+  el.innerHTML = filtered.map((p,i) => `
+    <div class="lb-row">
+      <div class="lb-rank ${i<3 ? ['gold','silver','bronze'][i] : ''}">${i+1}</div>
+      <div class="avatar">${p.name.slice(0,2)}</div>
+      <div style="flex:1">
+        <div style="font-weight:600;font-size:0.9rem">${p.name}</div>
+        <div style="font-size:0.78rem;color:var(--pp-gray)">${p.city} · ${p.category} · ${p.wins}-${p.losses}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.75rem">
+        <div class="rating-badge">${p.rating}</div>
+        <a href="${p.dupr}" target="_blank" class="dupr-badge" style="font-size:0.7rem;padding:0.2rem 0.5rem">DUPR</a>
+      </div>
+    </div>
+  `).join('') || '<div style="padding:1.5rem;text-align:center;color:var(--pp-gray)">No players found</div>';
+}
+
+// HOME TOP PLAYERS
+function buildTopPlayersHome() {
+  const top4 = dumaguetePlayers.slice(0,4);
+  document.getElementById('top-players-home').innerHTML = top4.map((p,i) => `
+    <div class="lb-row">
+      <div class="lb-rank ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${i+1}</div>
+      <div class="avatar" style="width:36px;height:36px;font-size:0.8rem">${p.name.slice(0,2)}</div>
+      <div style="flex:1"><div style="font-weight:600;font-size:0.9rem">${p.name}</div><div style="font-size:0.78rem;color:var(--pp-gray)">${p.category}</div></div>
+      <div class="rating-badge">${p.rating}</div>
+    </div>
+  `).join('');
+}
+
+// OTHER BUILD FUNCTIONS (simplified for mobile)
+function buildResults() {
+  document.getElementById('results-list').innerHTML = `
+    <div class="mh-row" style="padding:0.85rem 1rem;grid-template-columns:2fr 1fr 1fr 1fr;gap:1rem">
+      <div>Dumaguete Open 2024</div><div class="win">Neil Tinaytina</div><div>A</div><div>May 2024</div>
+    </div>
+    <div class="mh-row" style="padding:0.85rem 1rem;grid-template-columns:2fr 1fr 1fr 1fr;gap:1rem">
+      <div>Negros League #2</div><div class="win">Marvin Salvoro</div><div>A</div><div>Apr 2024</div>
+    </div>
+  `;
+}
+
+function buildGallery() {
+  const emojis = ['🏓','🏆','📸','⚡','🎾','🌅','👏','🤝','🎽','🔥'];
+  document.getElementById('gallery-grid').innerHTML = Array(12).fill().map((_,i) => `
+    <div class="gallery-item">
+      <div class="thumb">${emojis[i%emojis.length]}</div>
+      <div class="overlay"><div class="caption">Dumaguete Match ${i+1}</div></div>
+    </div>
+  `).join('');
+}
+
+function uploadPhoto(input) {
+  if (input.files[0] && isLoggedIn) {
+    const url = URL.createObjectURL(input.files[0]);
+    const preview = document.createElement('div');
+    preview.className = 'upload-preview';
+    preview.innerHTML = `
+      <img src="${url}"/>
+      <button class="upload-remove" onclick="this.parentNode.remove()">×</button>
+    `;
+    document.getElementById('post-preview').innerHTML = '';
+    document.getElementById('post-preview').appendChild(preview);
+    showNotif('Photo ready to post!');
+  }
+}
+
+function publishPost() {
+  if (!isLoggedIn) return showLogin();
+  const caption = document.getElementById('post-caption').value;
+  if (caption) {
+    showNotif('Posted to Dumaguete feed!');
+    document.getElementById('post-caption').value = '';
+    document.getElementById('post-preview').innerHTML = '';
+  }
+}
+
+function logMatch() {
+  if (!isLoggedIn) return showLogin();
+  showNotif('Match logged! DUPR rating updated to 4.35 (+0.10)');
+  currentUser.rating += 0.10;
+  updateProfileHeader();
+}
+
+// EVENT LISTENERS
+document.getElementById('player-search').addEventListener('input', (e) => buildPlayers('all', e.target.value));
+document.querySelectorAll('#page-players .filter-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('#page-players .filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    buildPlayers(chip.dataset.filter, document.getElementById('player-search').value);
+  });
+});
+
+document.querySelectorAll('.filter-chip').forEach(c => {
+  c.addEventListener('click', () => {
+    c.closest('.filter-bar').querySelectorAll('.filter-chip').forEach(x => x.classList.remove('active'));
+    c.classList.add('active');
+  });
+});
+
+// INIT
+buildTopPlayersHome();
+buildPlayers();
+buildResults();
+buildGallery();
+toggleEventFields();
+</script>
+</body>
+</html>
